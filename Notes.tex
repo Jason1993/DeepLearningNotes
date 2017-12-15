@@ -1,0 +1,88 @@
+\documentclass{article}
+\usepackage{amsmath,amsfonts,amssymb,bm}
+\begin{document}
+
+\section{Convolutional Nerual Networks}
+\subsection{Different layers in CNN}
+	\subsubsection{Convolution Layer}
+		\begin{flushleft}
+			Convolution layer: uses filters as parameters, convolve filters with the image by multiplying its values element-wise with the original matrix.
+		\end{flushleft}
+		\begin{flushleft}
+			In forward pass, we take many filters and convolve them on the input, each convolution gives a 2D matrix output, then stack them into a 3D volume. Usually every convolution layer is followed by a relu layer.
+		\end{flushleft}
+		\begin{flushleft}
+			In backward pass, we calculate the derivations of each variables based on the following parameters.
+		\end{flushleft}
+		This is the formula for computing $dA$.
+		\begin{center}
+			$dA \mathrel{+}= \sum_{h=0}^{nH} \sum_{w=0}^{nW} W_c * dZ_{hw}$
+		\end{center}
+		\begin{flushleft}
+			Where $W_c$ is a filter and $dZ_{hw}$ is a scalar corresponding to the gradient of the cost with respect to the output of the conv layer Z at the hth row and wth column (corresponding to the dot product taken at the ith stride left and jth stride down).	
+		\end{flushleft}
+	\subsection{Multi-class learning}
+		For multi-class classification, we use Softmax function to output classification.
+
+\section{CNN Case studies}
+	\subsection{Classic Networks}
+		\subsubsection{LeNet-5}
+			Two Convolution layers followed by avg-pool layers, then two fully-connected layer, use softmax as the output layer. As the network goes deep,
+the height and width of the volume go down, and the number of filters (or the depth of the volumn) go up.
+		\subsubsection{AlexNet}
+			Same padding is used, $pad = (f - 1)/2$. AlexNet is similar to LeNet, but much bigger. And uses Relu as activate function.
+		\subsubsection{VGG-16}
+			All convolution layers are 3*3 filters, stride = 1, same pooling.\\
+			All max-pooling layers are 2*2 filters, stride = 2.\\
+			VGG simplied neural network architectures. The architecture of VGG-16 is uniform. Use max-pooling with 2*2 filters, stride = 2 makes the height and width go half every time.
+	\subsection{ResNet}
+		\subsubsection{Introduction}
+			Use resudual blocks allow to build deep networks. Number of training error goes down with ResNet layer numbers goes up.
+		\subsubsection{Intuition}
+			\begin{center}
+			$a^{[l+2]} = g(z^{[l+2]}+a^{[l]})$ \\
+			$a^{[l+2]} = g(w^{[l+2]}*a^{[l+1]}+b^{[l+2]}+a^{[l]})$
+			\end{center}
+			\begin{flushleft}
+				Use same padding convolve to ensure the demisons of the matrix. Or using pooling layers to adjust the demisons.
+			\end{flushleft}
+	\subsection{1*1 convolution}
+		\begin{flushleft}
+			Filters are 3D volume, and size is $1*1*N_{c_prev}$.Works as fully connected network with Relu. Network in Network. Useful to shrink the number of channels.
+		\end{flushleft}
+		\begin{flushleft}
+			Inception layer uses 1*1 convolutions, other convolutions and pooling layers, and stack up all the outputs. Using 1*1 convolution reduces the computational cost without harming the performance.
+		\end{flushleft}
+	\subsection{Inception Network}
+		\begin{flushleft}
+			Inception module concatenates convolution and maxpooling layers output. Inception network puts inception modules together.\\
+			Inception module makes network go deeper.
+		\end{flushleft}
+	\subsection{Pratical Advices}
+		\begin{itemize}
+			\item Use Open-Sourece Implementation
+			\item Transfer Learning
+			\item Data Augmentation
+		\end{itemize}
+		\subsubsection{Data Augmentation}
+			\begin{itemize}
+				\item Mirroring
+				\item Random Cropping
+				\item Rotation
+				\item (PCA) Color shifting
+			\end{itemize}
+		\subsubsection{Deep Learning for Computer Vision}
+			\begin{flushleft}
+				Two sources of knowledge: Labeled data and hand engineering/network architecture.
+			\end{flushleft}
+			\begin{flushleft}
+				Tips for doing well on benchmarks or competetions:
+				\begin{itemize}
+					\item Train several networks independently and average their outputs.
+					\item Multi-crop at test time and average results.
+					\item Use architectures of networks published in the literature.
+					\item Use open sourece implementations if possible.
+					\item Use pretrained models and fine-tune on your dataset.
+				\end{itemize}
+			\end{flushleft}
+\end{document}
