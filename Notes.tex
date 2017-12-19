@@ -107,4 +107,44 @@ the height and width of the volume go down, and the number of filters (or the de
 					\item Use pretrained models and fine-tune on your dataset.
 				\end{itemize}
 			\end{flushleft}
+
+\section{Detection Algorithm}
+	\subsection{Object Location}
+		\begin{flushleft}
+			For an image, the coordinate is set like this: the left up corner is set to $(0,0)$, and the right bottom corner is set to $(1,1)$. The center point of an bounding box is then $(b_x,b_y)$, in the coordinate of image. The bounding box height and width is $(b_h,b_w)$.
+		\end{flushleft}
+	\subsection{Convolutional Implementation of Sliding Windows}
+		\begin{flushleft}
+			Running sliding windows explicitly slide over the image contains a lot dublicate computation. Instead, treating the whole computation process of a window sliding as a convolutional layer, and compute the image convolutional, each part of output volume corresponds to a sliding window output.
+		\end{flushleft}
+	\subsection{YOLO Algorithm}
+		\begin{flushleft}
+			YOLO Algorithm sets grid on the image, and for each grid cell, it will feed the data into convolutional network, output the predict labels, and then use back propagation to train the convolutional network.
+		\end{flushleft}
+		\begin{flushleft}
+			The center of a bounding box $(b_x, b_y)$ is relative position in a grid cell, so $b_x, b_y$ are between 0 and 1. So the output function of $b_x, b_y$ can be sigmoid function\\
+			The heigth and width of a bounding box $(b_h, b_w)$ are relative length in a grid cell, but $b_h, b_w$ can be larger than 1. The output function of $b_h, b_w$ can be exponential function.
+		\end{flushleft}
+	\subsection{Intersection Over Union}
+		\begin{flushleft}
+			Intersection Over Union is a way to evaluating object localization. It calculate the intersection part of output and ground truth over the union part of output and ground truth.\\ Usually the output is considerred as "correct", if $IoU \geq 0.5$.\\
+			More generally, IoU is a measure of the overlap between two bounding boxes.
+		\end{flushleft}
+	\subsection{Non-max Suppression}
+		\begin{flushleft}
+			Non-max Suppression is a way to make sure the algorithm detects the object only once.
+		\end{flushleft}
+		\begin{flushleft}
+			Basically, Non-max Suppression will discard all bounding boxes with $P_c \leq 0.6$.\\
+			Then it will do the following steps iteratively:
+			\begin{enumerate}
+				\item Pick the bounding with highest $P_c$, output that as prediction.
+				\item Suppress those bounding boxes that $IoU \geq 0.5$ with previous bounding box.
+			\end{enumerate}
+		\end{flushleft}
+	\subsection{Anchor Boxes}
+		\begin{flushleft}
+			Anchor boxes are pre-difined to avoid object overlapping.\\
+			Each object in the training image is assigned to grid cell that contains objects midpoint and anchor box for the grid cell with the highest IoU.
+		\end{flushleft}
 \end{document}
