@@ -1,29 +1,51 @@
 \documentclass{article}
-\usepackage{amsmath,amsfonts,amssymb,bm}
+\usepackage{amsmath,amsfonts,amssymb,bm,upquote}
 \begin{document}
 
 \section{Convolutional Nerual Networks}
-\subsection{Different layers in CNN}
-	\subsubsection{Convolution Layer}
-		\begin{flushleft}
-			Convolution layer: uses filters as parameters, convolve filters with the image by multiplying its values element-wise with the original matrix.
-		\end{flushleft}
-		\begin{flushleft}
-			In forward pass, we take many filters and convolve them on the input, each convolution gives a 2D matrix output, then stack them into a 3D volume. Usually every convolution layer is followed by a relu layer.
-		\end{flushleft}
-		\begin{flushleft}
-			In backward pass, we calculate the derivations of each variables based on the following parameters.
-		\end{flushleft}
-		This is the formula for computing $dA$.
-		\begin{center}
-			$dA \mathrel{+}= \sum_{h=0}^{nH} \sum_{w=0}^{nW} W_c * dZ_{hw}$
-		\end{center}
-		\begin{flushleft}
-			Where $W_c$ is a filter and $dZ_{hw}$ is a scalar corresponding to the gradient of the cost with respect to the output of the conv layer Z at the hth row and wth column (corresponding to the dot product taken at the ith stride left and jth stride down).	
-		\end{flushleft}
+	\subsection{Different layers in CNN}
+		\subsubsection{Convolution Layer}
+			\begin{flushleft}
+				Convolution layer: uses filters as parameters, convolve filters with the image by multiplying its values element-wise with the original matrix.
+			\end{flushleft}
+			\begin{flushleft}
+				In forward pass, we take many filters and convolve them on the input, each convolution gives a 2D matrix output, then stack them into a 3D volume. Usually every convolution layer is followed by a relu layer.
+			\end{flushleft}
+			\begin{flushleft}
+				In backward pass, we calculate the derivations of each variables based on the following parameters.
+			\end{flushleft}
+				This is the formula for computing $dA$.
+			\begin{center}
+				$dA \mathrel{+}= \sum_{h=0}^{nH} \sum_{w=0}^{nW} W_c * dZ_{hw}$
+			\end{center}
+			\begin{flushleft}
+				Where $W_c$ is a filter and $dZ_{hw}$ is a scalar corresponding to the gradient of the cost with respect to the output of the conv layer Z at the hth row and wth column (corresponding to the dot product taken at the ith stride left and jth stride down).	
+			\end{flushleft}
 	\subsection{Multi-class learning}
 		For multi-class classification, we use Softmax function to output classification.
-
+		\begin{center}
+			$\sigma(\bm{z})_j = \frac{e^{z_j}}{\sum_{k=1}^{K}e^{z_k}}$
+		\end{center}
+		\subsubsection{Derivation}
+			\begin{flushleft}
+				If we use cross-entropy loss function, such as following:
+			\end{flushleft}
+			\begin{center}
+				$L(\bm{W}) = - \frac{1}{N}\sum_{n=1}^{N}[y_n\log\hat{y}+(1-y_n)\log(1-\hat{y})]$
+			\end{center}
+			\begin{flushleft}
+				Then the derivation should be:
+			\end{flushleft}
+			\begin{center}
+				$\frac{\partial L}{\partial \bm{z}}= \bm{\hat{y}} - \bm{y}$
+			\end{center}
+		\subsubsection{Notes}
+			\begin{flushleft}
+				When used in back propagation in practical programs, espicially in mini-batch, don't forget to divide the derivation by the batch size.
+			\end{flushleft}
+			\begin{center}
+				$\frac{\partial L}{\partial \bm{z}}= (\bm{\hat{y}} - \bm{y})/batch-size$
+			\end{center}
 \section{CNN Case studies}
 	\subsection{Classic Networks}
 		\subsubsection{LeNet-5}
