@@ -1,5 +1,6 @@
 \documentclass{article}
-\usepackage{amsmath,amsfonts,amssymb,bm,upquote}
+\usepackage{amsmath,amsfonts,amssymb,bm,upquote,graphicx}
+
 \begin{document}
 
 \section{Convolutional Nerual Networks}
@@ -20,6 +21,25 @@
 			\end{center}
 			\begin{flushleft}
 				Where $W_c$ is a filter and $dZ_{hw}$ is a scalar corresponding to the gradient of the cost with respect to the output of the conv layer Z at the hth row and wth column (corresponding to the dot product taken at the ith stride left and jth stride down).	
+			\end{flushleft}
+			\begin{flushleft}
+				This is the formula for computing $dW_c$ with respect to the loss:
+			\end{flushleft}
+			\begin{center}
+				$dW_c \mathrel{+}= \sum_{h=0}^{nH}\sum_{w=0}^{nW} a_{slice}*dZ_{hw}$ 
+			\end{center}
+			\begin{flushleft}
+				This is the formula for computing $db$ with respect to the cost for a certain filter.
+			\end{flushleft}
+			\begin{center}
+				$db = \sum_h \sum_w dZ_{hw}$
+			\end{center}
+		\subsubsection{Pooling Layer}
+			\begin{flushleft}
+				The pooling layer reduces the height and width of input volume/tensor. It helps reduce the computation, as well as helps make feature detectors more irvariant to its position in the input. There are two types of pooling layer: max-pooling and average-pooling.
+			\end{flushleft}
+			\begin{flushleft}
+				The pooling layer's implementation is some what similiar to convolution layer, it uses a filter slicing over the input volume. Usually a pooling layer doestn't contain zero-padding and it doesn't contain parameters. It will need two hyper-parameters: filter size and stride. If filter size is 2 and stride is 2, then after pooling the height and width of volume will be half of before.
 			\end{flushleft}
 	\subsection{Multi-class learning}
 		For multi-class classification, we use Softmax function to output classification.
@@ -46,6 +66,19 @@
 			\begin{center}
 				$\frac{\partial L}{\partial \bm{z}}= (\bm{\hat{y}} - \bm{y})/batch-size$
 			\end{center}
+	\subsection{Computation Improvment}
+		\begin{flushleft}
+			As it is mentioned before, if we compute convolution and pooling explicitly by single steps, it will be very time-consuming as it will need four nested four-loops to compute a 4D volume/tensor, and this type of computing contains a lot duplicates computation. In pracitical code, using explicit for-loop is usually avoided as it will take a lot time for computation.
+		\end{flushleft}
+		\begin{flushleft}
+			Usually in most deep learning frameworks, unrolling convolution layers are used to speeding up the computation process of convolution and pooling layers. The central idea is an unfolding and duplication of the input and rearrangement of the kernel parameters that produces a CPU/GPU friendly ordering.
+		\end{flushleft}
+		\begin{flushleft}
+			Using this approach each convolutional layer is converted to a matrix product during forward propagation. A nice byproduct of this is that we can simply write down the back-propagation step as another matrix product. 
+		\end{flushleft}
+		\begin{flushleft}
+			Simple unfolding of convolution is a well known technique. It is commonly implemented in signal processing and communications applications. For example, Matlab® has two functions, convmtx and convmtx2 (signal processing toolbox) which create “convolution matrices” in order to transform convolution into a matrix multiplication.
+		\end{flushleft}
 \section{CNN Case studies}
 	\subsection{Classic Networks}
 		\subsubsection{LeNet-5}
