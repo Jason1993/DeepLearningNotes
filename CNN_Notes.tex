@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage{amsmath,amsfonts,amssymb,bm,upquote,graphicx}
+\usepackage{amsmath,amsfonts,amssymb,bm,upquote}
 
 \begin{document}
 
@@ -180,4 +180,34 @@ the height and width of the volume go down, and the number of filters (or the de
 			Anchor boxes are pre-difined to avoid object overlapping.\\
 			Each object in the training image is assigned to grid cell that contains objects midpoint and anchor box for the grid cell with the highest IoU.
 		\end{flushleft}
+
+\section{Special Applications}
+	\subsection{Face Recognition}
+		\subsubsection{Face verification}
+			\begin{flushleft}
+				One shot learning is the challenge. Instead of traing softmax CNN, it learns a similarity function, which indicates the degree of difference between images. Face verification is a single step in face recognition.
+			\end{flushleft}
+		\subsubsection{Nerual Network For Degree Difference - Siamese Network}
+			\begin{flushleft}
+				Instead of softmax, output full-connected output result as encodings of input. Parameters are learning so that if inputs are same people, output should be small, else the output should be large.
+			\end{flushleft}
+		\subsubsection{Triplet Loss}
+			\begin{flushleft}
+				Looking at three images at a time, anchor, positive, negative images, which means $d(A,P) + \alpha \leq d(A,N)$. The definition is :
+			\end{flushleft}
+			\begin{center}
+				$L(A,P,N) = \max(\left\Vert f(A) - f(P) \right\Vert^2 - \left\Vert f(A) - f(N) \right\Vert^2 + \alpha, 0)$
+			\end{center}
+			\begin{center}
+				$Cost = \sum_{i=1}^M L(A^i, P^i, N^i)$
+			\end{center}
+			\begin{flushleft}
+				Choose triplets that are "hard" to train on. 
+			\end{flushleft}
+		\subsubsection{Binary Classification}
+			\begin{flushleft}
+				Use a sigmoid function to output result of element-wise difference encoding of input.
+			\end{flushleft}
+	\subsection{Neural Style Transfer}
+	
 \end{document}
